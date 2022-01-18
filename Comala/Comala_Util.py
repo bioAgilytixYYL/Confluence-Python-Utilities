@@ -22,11 +22,12 @@ class Comala_Util:
 
         requestResponse = requests.get(requestUrl, auth=(self.__username, self.__password))
         if (requestResponse.status_code == 200):
-            print(requestResponse.json())
+            ##print(requestResponse.json())
             if requestResponse.json()['state']['name'] == "Draft":
                 return True
         else:
-            print("Request Failed")
+            print("Request Failed with Status Code: {} on the page : {}".format(
+                requestResponse.status_code, pageId))
         return False
     
     def isInitial(self, pageId):
@@ -37,11 +38,13 @@ class Comala_Util:
         requestResponse = requests.get(
             requestUrl, auth=(self.__username, self.__password))
         if (requestResponse.status_code == 200):
-            print(requestResponse.json())
-            if requestResponse.json()['state']['initial'] == True:
-                return True
+            ##print(requestResponse.json())
+            print("Request Successful with Status Code: {} on the page : {}".format(
+                requestResponse.status_code, pageId))
+            return requestResponse.json()['state']['initial']
         else:
-            print("Request Failed")
+            print("Request Failed with Status Code: {} on the page : {}".format(
+                requestResponse.status_code, pageId))
         return False
 
     def isFinal(self, pageId):
@@ -52,9 +55,14 @@ class Comala_Util:
         requestResponse = requests.get(
             requestUrl, auth=(self.__username, self.__password))
         if (requestResponse.status_code == 200):
-            print(requestResponse.json())
-            if requestResponse.json()['state']['name'] == "Final":
-                return True
+            ##print(requestResponse.json())
+            print("Request Successful with Status Code: {} on the page : {}".format(
+                requestResponse.status_code, pageId))
+            if requestResponse.json()['state']['final'] == True:
+                return 1
+            else:
+                return 0
         else:
-            print("Request Failed")
-        return False
+            print("Request Failed with Status Code: {} on the page : {}".format(
+                requestResponse.status_code, pageId))
+        return -1
