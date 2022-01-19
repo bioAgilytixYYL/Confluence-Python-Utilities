@@ -27,6 +27,21 @@ class Confluence_Util:
            idList.append(page['id'])
         return idList
 
+    def getAllChildren(self, parentPageId):
+        result = self.__confluence.get_page_by_id(page_id=parentPageId, expand="children")
+        ##requestUrl = result['children']['_links']['self']
+        requestUrl = "{}{}/search?start=0&limit=9999&cql=parent={}".format(
+            self.__confluenceBaseUrl, self.__contentApiUrl, parentPageId)
+        print(requestUrl)
 
-    
+        requestResponse = requests.get(
+            requestUrl, auth=(self.__username, self.__password))
+        print(requestResponse)
+        return requestResponse.json()['results']
 
+    def getPageBody(self, pageId):
+        requestUrl = "{}/rest/api/content/{}?expand=body.storage".format(
+            self.__confluenceBaseUrl, pageId)
+        requestResponse = requests.get(
+            requestUrl, auth=(self.__username, self.__password))
+        return requestResponse.json()['body']['storage']['value']
